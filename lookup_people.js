@@ -10,6 +10,9 @@ const client = new pg.Client({
   ssl      : settings.ssl
 });
 
+
+
+
 var nameToSearch = process.argv[2];
 
 client.connect((err) => {
