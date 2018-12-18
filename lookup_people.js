@@ -12,35 +12,6 @@ const client = new pg.Client({
 
 var nameToSearch = process.argv[2];
 
-// client.query('select * from famous_people;',
-//   function(err, results) {
-//       if (err) {
-//         console.log("Error", err);
-//       } else {
-//         console.log(results.rows);
-//       }
-//         client.end();
-//     }
-//   );
-
-// client.connect((err) => {
-//   if (err) {
-//     return console.error("Connection Error", err);
-//   }
-//   client.query("SELECT $1::int AS number", ["1"], (err, result) => {
-//     if (err) {
-//       return console.error("error running query", err);
-//     }
-//     console.log(result.rows[0].number); //output: 1
-//     client.end();
-//   });
-// });
-
-// regular query:
-/* SELECT first_name, last_name, birthdate
-    WHERE first_name = 'Paul' OR last_name = 'Paul'
-*/
-
 client.connect((err) => {
   if (err) {
     return console.error("Connection Error", err);
@@ -49,16 +20,18 @@ client.connect((err) => {
     if (err) {
       return console.error("error running query", err);
     }
-    console.log("Searching...")
-    console.log(result.rows); //output: 1
+    console.log("Searching...");
+    console.log("Found " + result.rows.length + " person(s) by the name " + nameToSearch);
 
+    for (var i = 0; i < result.rows.length; i++){
+      var id = Number([i]) + 1 ;
+      var first = result.rows[i].first_name;
+      var last = result.rows[i].last_name;
+      var birthday = result.rows[i].birthdate;
+
+      console.log("- " + id + ": " + first + " " + last + ", born " + birthday.toDateString())
+    }
 
     client.end();
   });
 });
-
-
-// Searching ...
-// Found 2 person(s) by the name 'Paul':
-// - 1: Paul Rudd, born '1969-04-06'
-// - 2: Paul Giamatti, born '1967-06-06'
